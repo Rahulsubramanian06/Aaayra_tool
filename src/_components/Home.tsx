@@ -9,6 +9,7 @@ import scopper from "../assets/Home/small_copper.png"
 import { Menu } from "lucide-react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
+import { useNavigate } from "react-router-dom";
 // @ts-ignore
 import 'swiper/css';
 // @ts-ignore
@@ -160,6 +161,7 @@ const CompositionCard = ({ composition }: { composition: Composition }) => (
 );
 
 export function Home() {
+  const navigate = useNavigate();
   return (
     <div className="bg-gray-50">
       <div className="px-4 sm:px-6 lg:px-8 pt-4 pb-2">
@@ -194,7 +196,10 @@ export function Home() {
                 ))}
               </Swiper>
               <div className="mt-6 flex justify-center">
-                <Button className="w-full sm:w-auto bg-[#001845] hover:bg-[#001845]/90">
+                <Button
+                  className="w-full sm:w-auto bg-[#001845] hover:bg-[#001845]/90"
+                  onClick={() => navigate("/new_composition")}
+                >
                   Make New Composition
                 </Button>
               </div>
