@@ -369,8 +369,19 @@ const NewComposition: React.FC = () => {
           {/* Proceed Button */}
           <button
             className="w-full bg-[#001845] text-white rounded py-2 font-semibold mt-4 hover:bg-[#001845]/90 transition disabled:opacity-50"
-            disabled={(scrapAvailable && (!purityIs100 || scrapExceedsTotal))}
-            onClick={() => navigate('/composition_slider')}
+            disabled={
+              !primaryMetal ||
+              secondaryMetals.length === 0 ||
+              !totalQuantity || isNaN(Number(totalQuantity)) || Number(totalQuantity) <= 0 ||
+              (scrapAvailable && (!purityIs100 || scrapExceedsTotal))
+            }
+            onClick={() => navigate('/composition_slider', {
+              state: {
+                primaryMetal,
+                secondaryMetals,
+                totalQuantity
+              }
+            })}
           >
             Proceed To Next Step
           </button>
