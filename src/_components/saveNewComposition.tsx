@@ -3,8 +3,8 @@ import bigSilver from "../assets/Home/big_silver.png";
 import smallCopper from "../assets/Home/small_copper.png";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../components/ui/select";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const metalImages: Record<string, string> = {
   Gold: bigGold,
@@ -12,27 +12,13 @@ const metalImages: Record<string, string> = {
   Copper: smallCopper,
 };
 
-const metalsList = [
-  {
-    name: "Gold",
-    img: bigGold,
-    description: "Gold, Silver, Copper",
-  },
-  {
-    name: "Silver",
-    img: bigSilver,
-    description: "Silver metal",
-  },
-  {
-    name: "Copper",
-    img: smallCopper,
-    description: "Copper metal",
-  },
-];
 
 const SaveNewComposition = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { metals = ["Gold", "Silver", "Copper"], metalPercentages = {}, totalQuantity = "" } = location.state || {};
+
+  const [compositionName, setCompositionName] = useState("");
 
   // Build table data dynamically
   const tableData = metals.map((metal: string) => {
@@ -52,35 +38,26 @@ const SaveNewComposition = () => {
       <div className="w-full max-w-md">
         <h2 className="text-lg font-semibold mt-4">New Composition</h2>
         <p className="text-xs text-gray-400 mb-2">Choose Metals For Composition</p>
-        {/* Metal Select */}
-        <Select>
-          <SelectTrigger className="w-full border rounded-lg flex items-center">
-            <SelectValue placeholder={<div className="flex items-center gap-2">
-              <img src={metalsList[0].img} alt="Gold" className="w-8 h-8 rounded-full" />
-              <div>
-                <div className="font-semibold">Gold</div>
-                <div className="text-xs text-gray-400">{metalsList[0].description}</div>
-              </div>
-            </div>} />
-          </SelectTrigger>
-          <SelectContent>
-            {metalsList.map((metal) => (
-              <SelectItem key={metal.name} value={metal.name}>
-                <div className="flex items-center gap-2">
-                  <img src={metal.img} alt={metal.name} className="w-8 h-8 rounded-full" />
-                  <div>
-                    <div className="font-semibold">{metal.name}</div>
-                    <div className="text-xs text-gray-400">{metal.description}</div>
-                  </div>
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {/* Display Card for Selected Metals */}
+        <div className="border border-[#1B3A6B] rounded-lg bg-white px-4 py-3 mb-4 flex items-center gap-4">
+          <img src={metalImages[metals[0]] || ""} alt={metals[0]} className="w-14 h-14 rounded-full object-cover border" />
+          <div className="flex-1 min-w-0">
+            <div className="font-bold text-xl text-[#052659] truncate">{metals[0]}</div>
+            <div className="text-xs text-[#B6B6B6] font-semibold mb-1">Composition</div>
+            <div className="text-sm text-[#052659] truncate">
+              {metals.join(", ")}
+            </div>
+          </div>
+        </div>
         {/* Name input */}
         <div className="mt-4">
           <label className="text-xs font-semibold">Name of the new Composition</label>
-          <Input className="mt-1" placeholder="" />
+          <Input
+            className="mt-1"
+            placeholder=""
+            value={compositionName}
+            onChange={e => setCompositionName(e.target.value)}
+          />
         </div>
         {/* Quantity input */}
         <div className="mt-4">
@@ -113,7 +90,13 @@ const SaveNewComposition = () => {
         </div>
         {/* Save Button */}
         <div className="flex justify-center mt-10 mb-4">
-          <Button className="bg-blue-900 text-white px-8 py-2 rounded-lg">Save New Composition</Button>
+          <Button
+            className="bg-blue-900 text-white px-8 py-2 rounded-lg"
+            disabled={!compositionName.trim()}
+            onClick={() => navigate("/myComposition")}
+          >
+            Save New Composition
+          </Button>
         </div>
       </div>
     </div>
