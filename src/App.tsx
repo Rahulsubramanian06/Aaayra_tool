@@ -4,6 +4,7 @@ import { Account } from './_components/Account'
 import { Home } from './_components/Home'
 import NewComposition from './_components/NewComposition'
 import CompositionSliders from './_components/CompositionSliders'
+import SaveNewComposition from './_components/saveNewComposition'
 function App() {
   return (
     <Router>
@@ -15,6 +16,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/new_composition" element={<NewComposition />} />
           <Route path="/composition_slider" element={<CompositionSliders />} />
+          <Route path="/saveNewComposition" element={<SaveNewComposition />} />
         </Routes>
       </div>
     </Router>

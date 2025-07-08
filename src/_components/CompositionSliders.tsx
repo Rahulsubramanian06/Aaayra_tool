@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Slider } from "@/components/ui/slider";
 
 // Import metal icons
@@ -39,6 +39,7 @@ const bsiStandardValues: Record<string, number> = {
 const CompositionSliders: React.FC = () => {
   // Get data from router state
   const location = useLocation();
+  const navigate = useNavigate();
   const state = (location.state || {}) as CompositionSlidersState;
   const { primaryMetal, secondaryMetals, totalQuantity } = state;
 
@@ -299,7 +300,13 @@ const CompositionSliders: React.FC = () => {
       </div>
       {/* Sticky Proceed Button */}
       <div className="fixed bottom-0 left-0 w-full flex justify-center bg-white py-4 border-t border-[#EAEAEA] z-20">
-        <button
+        <button onClick={() => navigate("/saveNewComposition", {
+          state: {
+            metals: [primaryMetal, ...secondaryMetals],
+            metalPercentages,
+            totalQuantity,
+          }
+        })}
           className="w-full max-w-md bg-[#001845] text-white rounded py-3 font-semibold text-base hover:bg-[#001845]/90 transition mx-2"
         >
           Proceed To Next Step
