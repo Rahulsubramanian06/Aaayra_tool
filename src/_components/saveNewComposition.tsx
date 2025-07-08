@@ -93,7 +93,27 @@ const SaveNewComposition = () => {
           <Button
             className="bg-blue-900 text-white px-8 py-2 rounded-lg"
             disabled={!compositionName.trim()}
-            onClick={() => navigate("/myComposition")}
+            onClick={() => {
+              // Build the new composition object
+              const newComposition = {
+                type: compositionName + (totalQuantity ? ` (${totalQuantity}g)` : ""),
+                image: metalImages[metals[0]] || "",
+                metals: tableData.map((row: { name: string; img: string; percent: string; weight: string }) => ({
+                  name: row.name,
+                  icon: row.img,
+                  comp: row.percent,
+                  weight: row.weight,
+                })),
+              };
+              // Get existing compositions from localStorage
+              const existing = JSON.parse(localStorage.getItem("compositions") || "[]");
+              // Add new composition
+              existing.push(newComposition);
+              // Save back to localStorage
+              localStorage.setItem("compositions", JSON.stringify(existing));
+              // Navigate
+              navigate("/myComposition");
+            }}
           >
             Save New Composition
           </Button>

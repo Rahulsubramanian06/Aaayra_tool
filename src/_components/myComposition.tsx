@@ -1,4 +1,18 @@
+import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
+import { useNavigate } from "react-router-dom";
+
+// Define the type for a composition
+interface Composition {
+  type: string;
+  image: string;
+  metals: {
+    name: string;
+    icon: string;
+    comp: string;
+    weight: string;
+  }[];
+}
 
 const compositions = [
   {
@@ -21,15 +35,24 @@ const compositions = [
 ];
 
 const MyComposition = () => {
-  // Repeat the cards as in the screenshot (3 gold, 3 silver)
-  const cards = [
-    compositions[0],
-    compositions[1],
-    compositions[0],
-    compositions[1],
-    compositions[0],
-    compositions[1],
-  ];
+  const [cards, setCards] = useState<Composition[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("compositions") || "null");
+    if (saved && Array.isArray(saved) && saved.length > 0) {
+      setCards(saved);
+    } else {
+      setCards([
+        compositions[0],
+        compositions[1],
+        compositions[0],
+        compositions[1],
+        compositions[0],
+        compositions[1],
+      ]);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-white flex flex-col px-4 pt-4 pb-6">
@@ -76,7 +99,9 @@ const MyComposition = () => {
         ))}
       </div>
       <div className="mt-6 flex justify-center">
-        <Button className="w-full max-w-xs text-base py-6 rounded-lg bg-blue-900 hover:bg-blue-800 text-white font-semibold">
+        <Button className="w-full max-w-xs text-base py-6 rounded-lg bg-blue-900 hover:bg-blue-800 text-white font-semibold"
+          onClick={() => navigate("/new_composition")}
+        >
           Make New Composition
         </Button>
       </div>

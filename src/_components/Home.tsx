@@ -10,6 +10,7 @@ import { Menu } from "lucide-react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 // @ts-ignore
 import 'swiper/css';
 // @ts-ignore
@@ -162,6 +163,27 @@ const CompositionCard = ({ composition }: { composition: Composition }) => (
 
 export function Home() {
   const navigate = useNavigate();
+  const [comps, setComps] = useState<Composition[]>(compositions);
+
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("compositions") || "null");
+    if (saved && Array.isArray(saved) && saved.length > 0) {
+      // Map localStorage structure to Composition type if needed
+      const mapped = saved.map((c: any) => ({
+        type: c.type || "",
+        title: c.type || "",
+        image: c.image || bgold,
+        data: (c.metals || []).map((m: any) => ({
+          metal: m.name,
+          percent: m.comp,
+          weight: m.weight,
+        })),
+      }));
+      setComps(mapped);
+    } else {
+      setComps(compositions);
+    }
+  }, []);
   return (
     <div className="bg-gray-50">
       <div className="px-4 sm:px-6 lg:px-8 pt-4 pb-2">
@@ -189,7 +211,7 @@ export function Home() {
                 pagination={{ clickable: true }}
                 loop={true}
               >
-                {compositions.map((composition, index) => (
+                {comps.map((composition, index) => (
                   <SwiperSlide key={index} className="pb-10">
                     <CompositionCard composition={composition} />
                   </SwiperSlide>
